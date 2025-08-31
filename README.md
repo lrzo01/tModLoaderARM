@@ -2,7 +2,6 @@
 
  A native patch for tModLoader on Apple Silicon (M1/M2/M3/M4) Macs. This patch enables direct Metal graphics support via SDL2-compat, removing the need for MoltenVK or OpenGL, and bundles all required ARM64 native libraries and binaries.
 
----
 
 ## Acknowledgements
 
