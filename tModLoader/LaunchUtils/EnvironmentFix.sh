@@ -41,7 +41,7 @@ fi
 # without actually invoking managed NativeLibrary resolving events!
 if [ "$_uname" = Darwin ]; then
 	if [ "$(uname -m)" = "arm64" ]; then
-    	library_dir="$root_dir/Libraries/Native/OSX-arm"
+    	library_dir="$root_dir/Libraries/Native/OSX-arm64"
 	else
 		library_dir="$root_dir/Libraries/Native/OSX"
 	fi
