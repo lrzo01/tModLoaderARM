@@ -27,6 +27,22 @@ if [ -f "$NativeLog" ]; then
 fi
 touch "$NativeLog"
 
+LAUNCH_SDL2=false
+LAUNCH_SDL3=false
+
+for arg in "$@"; do
+	case "$arg" in
+		--sdl2)
+			LAUNCH_SDL2=true
+			echo "SDL2 flag detected" 2>&1 | tee -a "$LogFile"
+			;;
+		--sdl3)
+			LAUNCH_SDL3=true
+			echo "SDL3 flag detected" 2>&1 | tee -a "$LogFile"
+			;;
+	esac
+done
+
 # Environment variable fixes & Platform Cleanups
 . ./EnvironmentFix.sh
 
@@ -43,7 +59,6 @@ if [[ ! -f "$LaunchLogs/client.log" && ! -f "$LaunchLogs/server.log" ]]; then
 	mkdir "$dotnet_dir"
 fi
 
-# Dotnet binaries Fixes (Proton, AppleSilicon)
 if [[ "$_uname" == *"_NT"* ]]; then
 	if [[ -f "$dotnet_dir/dotnet" ]]; then
 		echo "A non-Windows dotnet executable was detected. Deleting dotnet_dir and resetting"  2>&1 | tee -a "$LogFile"
@@ -55,8 +70,12 @@ else
 		echo "A Windows dotnet executable was detected, possibly from a previous Proton launch. Deleting dotnet_dir and resetting"  2>&1 | tee -a "$LogFile"
 		rm -rf "$dotnet_dir"
 		mkdir "$dotnet_dir"
-	elif [[ "$_arch" != "arm64" ]] && [[ "$(file "$dotnet_dir/dotnet")" == *"arm64"* ]]; then
-		echo "An arm64 install of dotnet was detected. Deleting dotnet_dir and resetting"  2>&1 | tee -a "$LogFile"
+	elif [[ "$_arch" != "arm64" ]] && [[ "$(file "$dotnet_dir/dotnet" 2>/dev/null)" == *"arm64"* ]]; then
+		echo "An arm64 install of dotnet was detected on x86_64 architecture. Deleting dotnet_dir and resetting"  2>&1 | tee -a "$LogFile"
+		rm -rf "$dotnet_dir"
+		mkdir "$dotnet_dir"
+	elif [[ "$_arch" == "arm64" ]] && [[ "$(file "$dotnet_dir/dotnet" 2>/dev/null)" == *"x86_64"* ]]; then
+		echo "An x86_64 install of dotnet was detected on arm64 architecture. Deleting dotnet_dir and resetting"  2>&1 | tee -a "$LogFile"
 		rm -rf "$dotnet_dir"
 		mkdir "$dotnet_dir"
 	fi

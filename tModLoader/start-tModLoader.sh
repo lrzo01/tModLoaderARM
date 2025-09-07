@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
-if [[ "$(uname -m)" != "arm64" ]]; then
-    exec arch -arm64 /bin/bash "$0" "$@"
+
+arch=arm64
+
+for arg in "$@"; do
+    if [[ "$arg" == --arch=* ]]; then
+        arch="${arg#--arch=}"
+        break
+    fi
+done
+
+if [[ "$(uname -m)" != "$arch" ]]; then
+    exec arch -$arch /bin/bash "$0" "$@"
 fi
 
 cd "$(dirname "$0")" ||
