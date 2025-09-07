@@ -27,6 +27,22 @@ if [ -f "$NativeLog" ]; then
 fi
 touch "$NativeLog"
 
+LAUNCH_SDL2=false
+LAUNCH_SDL3=false
+
+for arg in "$@"; do
+	case "$arg" in
+		--sdl2)
+			LAUNCH_SDL2=true
+			echo "SDL2 flag detected" 2>&1 | tee -a "$LogFile"
+			;;
+		--sdl3)
+			LAUNCH_SDL3=true
+			echo "SDL3 flag detected" 2>&1 | tee -a "$LogFile"
+			;;
+	esac
+done
+
 # Environment variable fixes & Platform Cleanups
 . ./EnvironmentFix.sh
 

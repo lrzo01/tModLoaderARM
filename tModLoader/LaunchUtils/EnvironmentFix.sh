@@ -41,10 +41,23 @@ fi
 # without actually invoking managed NativeLibrary resolving events!
 if [ "$_uname" = Darwin ]; then
 	if [ "$(uname -m)" = "arm64" ]; then
-    	library_dir="$root_dir/Libraries/Native/OSX-arm64"
+		if [ "$LAUNCH_SDL2" = true ]; then
+			library_dir="$root_dir/Libraries/Native/OSX-arm64/sdl2"
+			echo "Using SDL2 (arm64) from: $library_dir" 2>&1 | tee -a "$LogFile"
+		else
+			library_dir="$root_dir/Libraries/Native/OSX-arm64/sdl3"
+			echo "Using SDL3 (arm64) from: $library_dir" 2>&1 | tee -a "$LogFile"
+		fi
 	else
-		library_dir="$root_dir/Libraries/Native/OSX"
+		if [ "$LAUNCH_SDL3" = true ]; then
+			library_dir="$root_dir/Libraries/Native/OSX/sdl3"
+			echo "Using SDL3 (x86_64) from: $library_dir" 2>&1 | tee -a "$LogFile"
+		else
+			library_dir="$root_dir/Libraries/Native/OSX/sdl2"
+			echo "Using SDL2 (x86_64) from: $library_dir" 2>&1 | tee -a "$LogFile"
+		fi
 	fi
+	
 	export DYLD_LIBRARY_PATH="$library_dir"
 	export VK_ICD_FILENAMES="$library_dir/MoltenVK_icd.json"
 	ln -sf "$library_dir/libSDL2-2.0.0.dylib" "$library_dir/libSDL2.dylib"
