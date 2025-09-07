@@ -20,12 +20,6 @@ else
     fi
 fi
 
-if csrutil status | grep -q "enabled"; then
-    printf "\033[1;33m[WARNING]\033[0m System Integrity Protection (SIP) is enabled.\n"
-    printf "\033[1;33m[WARNING]\033[0m You may need to allow replaced .dylib libs in Privacy & Security settings on first launch.\n"
-    printf "\033[1;33m[WARNING]\033[0m You will need to relaunch per .dylib you allow.\n"
-fi
-
 BACKUP_DIR="$TML_PATH/backups"
 mkdir -p "$BACKUP_DIR"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -49,6 +43,8 @@ fi
 printf "\033[1;36m[ACTION]\033[0m Patching tModLoader...\n"
 cp -a "$REPO_TML_DIR/." "$TML_PATH/"
 
+printf "\033[1;36m[ACTION]\033[0m Removing quarantine attributes from dylib files...\n"
+find "$TML_PATH" -name "*.dylib" -exec xattr -d com.apple.quarantine {} \; 2>/dev/null
 
 SDL_DIR="$TML_PATH/Libraries/Native/OSX-arm64"
 mkdir -p "$SDL_DIR"
@@ -56,21 +52,6 @@ if [ -f "$SDL_DIR/libsdl2-2.0.0.dylib" ]; then
     printf "\033[1;36m[ACTION]\033[0m Creating symlink libSDL2.dylib -> libsdl2-2.0.0.dylib in %s\n" "$SDL_DIR"
     ln -sf "libsdl2-2.0.0.dylib" "$SDL_DIR/libSDL2.dylib"
 fi
-
-PROBLEMATIC_DYLIBS=(
-    "libSDL2-2.0.0.dylib"
-    "libFNA3D.0.dylib"
-    "libFAudio.0.dylib"
-)
-
-printf "\033[1;33m[NOTICE]\033[0m Attempting to open .dylib files so you can approve them in System Settings > Privacy & Security.\n"
-for dylib in "${PROBLEMATIC_DYLIBS[@]}"; do
-    DYLIB_PATH="$SDL_DIR/$dylib"
-    if [ -f "$DYLIB_PATH" ]; then
-        printf "\033[1;36m[ACTION]\033[0m Opening %s for approval...\n" "$DYLIB_PATH"
-        open "$DYLIB_PATH"
-    fi
-done
 
 printf "\033[1;32m[SUCCESS]\033[0m Patch complete.\n"
 printf "\033[1;32m[SUCCESS]\033[0m Ensure that you remove GLDevice from your steam launch options for TML.\n"
