@@ -45,11 +45,16 @@ mkdir -p "$STEAM_API_X86_SDL3_DIR"
 mkdir -p "$STEAM_API_ARM_DIR"
 
 if [ -f "$STEAM_API_DIR/libsteam_api64.dylib" ]; then
-    cp "$STEAM_API_DIR/libsteam_api64.dylib" "$STEAM_API_ARM_DIR/libsteam_api64.dylib" 2>/dev/null || true
-    cp "$STEAM_API_DIR/libsteam_api64.dylib" "$STEAM_API_ARM_SDL2_DIR/libsteam_api64.dylib" 2>/dev/null || true
-    cp "$STEAM_API_DIR/libsteam_api64.dylib" "$STEAM_API_ARM_SDL3_DIR/libsteam_api64.dylib" 2>/dev/null || true
-    cp "$STEAM_API_DIR/libsteam_api64.dylib" "$STEAM_API_X86_SDL2_DIR/libsteam_api64.dylib" 2>/dev/null || true
-    cp "$STEAM_API_DIR/libsteam_api64.dylib" "$STEAM_API_X86_SDL3_DIR/libsteam_api64.dylib" 2>/dev/null || true
+    TARGET_DIRS=(
+        "$STEAM_API_ARM_DIR"
+        "$STEAM_API_ARM_SDL2_DIR"
+        "$STEAM_API_ARM_SDL3_DIR"
+        "$STEAM_API_X86_SDL2_DIR"
+        "$STEAM_API_X86_SDL3_DIR"
+    )
+    for TARGET in "${TARGET_DIRS[@]}"; do
+        cp "$STEAM_API_DIR/libsteam_api64.dylib" "$TARGET/libsteam_api64.dylib" 2>/dev/null || true
+    done
 else
     printf "\033[1;33m[WARNING]\033[0m Steam API library not found, skipping Steam API setup\n"
 fi
