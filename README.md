@@ -1,6 +1,6 @@
 # tModLoader for Apple Silicon (arm64)
 
-A native patch for tModLoader on Apple Silicon (M1/M2/M3/M4) Macs. This patch enables direct Metal graphics support via SDL2-compat, removing the need for MoltenVK or OpenGL, and bundles all required ARM64 native libraries and binaries.
+A native patch for tModLoader on Apple Silicon (M1/M2/M3/M4) Macs. This patch enables direct Metal graphics support via SDL2-compat, removing the need for Vulkan or OpenGL, and bundles all required ARM64 native libraries and binaries.
 
 ## Launch Options
 
@@ -11,7 +11,7 @@ Extra launch flags allow you change runtime architecture and SDL version selecti
 - `--arch=x86_64` - Run under Rosetta translation (compatibility mode)
 
 ### SDL Version Selection
-- `--sdl2` - Uses SDL2 (poorer performance, more stable) - only running **only** with OpenGL on ARM64, with MoltenVK an option under x86_64
+- `--sdl2` - Uses SDL2 (poorer performance, more stable) - only running **only** with OpenGL on ARM64, with Vulkan an option under x86_64
 - `--sdl3` - **Default:** Uses SDL3 (improved performance, less stable) - allows running directly with Metal
 
 ---
