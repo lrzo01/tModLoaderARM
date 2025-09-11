@@ -11,8 +11,8 @@ Extra launch flags allow you change runtime architecture and SDL version selecti
 - `--arch=x86_64` - Run under Rosetta translation (compatibility mode)
 
 ### SDL Version Selection
-- `--sdl2` - Uses SDL2 (poorer performance, more stable) - only runs either using OpenGL/MoltenVK
-- `--sdl3` - **Recommended:** Uses SDL3 (improved performance, less stable) - allows running directly with Metal
+- `--sdl2` - Uses SDL2 (poorer performance, more stable) - only running **only** with OpenGL on ARM64, with MoltenVK an option under x86_64
+- `--sdl3` - **Default:** Uses SDL3 (improved performance, less stable) - allows running directly with Metal
 
 ---
 
@@ -24,6 +24,10 @@ Extra launch flags allow you change runtime architecture and SDL version selecti
 ---
 
 ## Known Issues & Workarounds
+
+- **Vulkan launch option unavailable on ARM64 SDL2:**
+  - *Issue:* Vulkan cannot be used as a launch option when using ARM64 and SDL2
+  - *Solution:* Remove the launch option from Steam to use OpenGL, or use SDL3 instead
 
 - **Accent Selector pops up when moving:**
   - *Issue:* The macOS accent selector may appear when holding movement keys.
